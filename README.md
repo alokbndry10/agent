@@ -228,3 +228,5 @@ This is a fully static site — no backend, no build step required. Deploy by co
 - **Local:** `npx serve . -p 3000`
 
 > Make sure the server serves `index.html` for all routes (SPA fallback) so React Router works correctly on direct URL access.
+
+done
