@@ -2,6 +2,8 @@
 
 **Nepal South Asia International Travels and Tours Pvt. Ltd.**
 
+Live site: [https://nepalsouthasiatravels.com.np](https://nepalsouthasiatravels.com.np)
+
 A fully static, pre-built React + Vite travel agency website. There are no source files — all application code lives in the compiled bundle. To make changes, edit the minified JS directly.
 
 ---
@@ -16,7 +18,7 @@ npx --yes serve . -p 3000
 
 Then open [http://localhost:3000](http://localhost:3000) in your browser.
 
-> **Requirements:** Node.js (v14+). Python is **not** available in this environment.
+> **Requirements:** Node.js (v14+).
 
 ---
 
@@ -25,8 +27,14 @@ Then open [http://localhost:3000](http://localhost:3000) in your browser.
 ```
 agent/
 │
-├── index.html                          # Entry point — loads the JS + CSS bundles
+├── index.html                          # Entry point — SEO meta tags, JSON-LD schema
 ├── logo.png                            # Site logo
+├── sitemap.xml                         # XML sitemap (all 20 pages, submitted to GSC)
+├── robots.txt                          # Search engine crawl rules
+├── vercel.json                         # SPA rewrite rules + static file exclusions
+├── googlee769bec0be0e47e4.html         # Google Search Console ownership verification
+├── server.js                           # Local dev server (port 3000)
+├── package.json
 ├── README.md                           # This file
 │
 ├── assets/
@@ -90,17 +98,34 @@ agent/
     │   ├── turkey.jpg
     │   └── united-kingdom.jpg
     │
-    ├── nepal/                          # Nepal-specific destination images
+    ├── nepal/                          # Nepal destination images
     │   ├── chitwan.jpg
     │   ├── everest.jpg
     │   ├── kathmandu.jpg
     │   ├── pokhara.jpg
     │   └── trekking.jpg
     │
-    ├── packages/                       # Tour package category images
-    │   ├── adventure.jpg
-    │   ├── family.jpg
-    │   └── honeymoon.jpg
+    ├── trekking/                       # Trekking page images
+    │   ├── everest-base-camp.jpg
+    │   ├── annapurna-circuit.jpg
+    │   ├── poon-hill.jpg
+    │   ├── manaslu-circuit.jpg
+    │   ├── gokyo-lakes.jpg
+    │   └── langtang-valley.jpg
+    │
+    ├── blog/                           # Blog page images
+    │   ├── bali.jpg
+    │   ├── everest.jpg
+    │   ├── malaysia-visa.jpg
+    │   ├── nepal-airlines.jpg
+    │   ├── thailand.jpg
+    │   └── vietnam.jpg
+    │
+    ├── vehicles/                       # Vehicles page images
+    │   ├── sedan.jpg
+    │   ├── suv.jpg
+    │   ├── hiace.jpg
+    │   └── coaster.jpg
     │
     └── partners/                       # Partner & certification logos (marquee section)
         ├── airlines/                   # Airline partner logos
@@ -148,19 +173,44 @@ agent/
 
 ## Pages & Routes
 
-| Route | Page |
+| Route | Page | Sitemap Priority |
+|---|---|---|
+| `/` | Home | 1.0 |
+| `/visa-services` | Visa Services | 0.9 |
+| `/flight-tickets` | Flight Tickets | 0.9 |
+| `/tour-packages` | Tour Packages | 0.9 |
+| `/destinations` | Destinations | 0.8 |
+| `/nepal-dmc` | Nepal DMC | 0.8 |
+| `/trekking` | Trekking | 0.8 |
+| `/hotels` | Hotels | 0.7 |
+| `/packages` | Packages | 0.7 |
+| `/blog` | Blog | 0.7 |
+| `/nepal` | Nepal Tours | 0.6 |
+| `/helicopter` | Helicopter / Chopper | 0.6 |
+| `/vehicles` | Vehicles | 0.6 |
+| `/insurance` | Travel Insurance | 0.6 |
+| `/events` | Events & Activities | 0.6 |
+| `/about` | About Us | 0.5 |
+| `/contact` | Contact | 0.5 |
+| `/sitemap` | Sitemap | 0.5 |
+| `/terms` | Terms & Conditions | 0.3 |
+| `/privacy` | Privacy Policy | 0.3 |
+
+---
+
+## SEO
+
+| Item | Status |
 |---|---|
-| `/` | Home |
-| `/destinations` | Destinations |
-| `/packages` | Packages |
-| `/nepal` | Nepal Tours |
-| `/about` | About Us |
-| `/contact` | Contact |
-| `/visa` | Visa Services |
-| `/insurance` | Travel Insurance |
-| `/events` | Events & Activities |
-| `/sitemap` | Sitemap |
-| `/blog` | ~~Blog~~ → redirects to `/` (removed) |
+| `sitemap.xml` | ✅ Live, submitted to Google Search Console |
+| `robots.txt` | ✅ Allows all crawlers, points to sitemap |
+| Canonical tag | ✅ `https://nepalsouthasiatravels.com.np/` |
+| Open Graph tags | ✅ Correct domain, absolute image URLs |
+| Twitter Card tags | ✅ |
+| JSON-LD schema | ✅ TravelAgency type with address, geo, phone, hours |
+| Google Search Console | ✅ Verified (HTML file method) |
+
+> **Note:** All 20 pages share the same `<title>` and `<meta description>` from `index.html` because this is a pre-built SPA with no source code. Per-page meta tags would require rebuilding the bundle with `react-helmet`.
 
 ---
 
@@ -214,19 +264,18 @@ Since this is a pre-built static site (no source code), all edits are made direc
 | Build Tool | Vite |
 | Routing | React Router |
 | Styling | CSS (compiled) |
-| Deployment | Static file server (any) |
+| Carousel animation | Pure CSS `@keyframes` (GPU-composited) |
+| Deployment | Vercel |
 
 ---
 
 ## Deployment
 
-This is a fully static site — no backend, no build step required. Deploy by copying all files to any static host:
+Deployed on **Vercel** via GitHub (`alokbndry10/agent`, `main` branch). Every `git push` to `main` auto-deploys.
 
-- **Vercel / Netlify:** Drag and drop the `agent/` folder
-- **cPanel / FTP:** Upload all files to `public_html/`
-- **GitHub Pages:** Push to a repo with Pages enabled
+`vercel.json` contains a SPA catch-all rewrite that serves `index.html` for all routes except static assets, `sitemap.xml`, `robots.txt`, and the Google verification file.
+
+For other hosts:
+- **Netlify:** Drag and drop the folder, add a `_redirects` file: `/* /index.html 200`
+- **cPanel / FTP:** Upload all files to `public_html/`, configure `.htaccess` for SPA fallback
 - **Local:** `npx serve . -p 3000`
-
-> Make sure the server serves `index.html` for all routes (SPA fallback) so React Router works correctly on direct URL access.
-
-done
